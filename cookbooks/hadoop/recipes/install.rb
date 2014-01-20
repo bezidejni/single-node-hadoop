@@ -5,5 +5,5 @@ end
 
 execute "unpack hadoop" do
   command "tar  -C #{node.hadoop.user_home} -xf #{node.hadoop.download_dir}/hadoop-#{node.hadoop.version}.tar.gz"
-  not_if {::File.exists?("#{node.hadoop.download_dir}/hadoop-1.2.0")}
+  not_if {::File.exists?("#{node.hadoop.download_dir}/hadoop-1.2.1")}
 end

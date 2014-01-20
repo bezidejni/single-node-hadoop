@@ -23,8 +23,13 @@ template "#{node.hadoop.user_home}/hadoop-#{node.hadoop.version}/conf/mapred-sit
   mode 0664
 end
 
-template "#{node.hadoop.user_home}/hadoop-1.2.0/conf/hdfs-site.xml" do
+template "#{node.hadoop.user_home}/hadoop-1.2.1/conf/hdfs-site.xml" do
   owner node.hadoop.user
   group node.hadoop.user_group_name
   mode 0664
+end
+
+execute "create directory through execute, coz chef is stupid with permission on recursive" do
+  command "./hadoop-#{node.hadoop.version}/bin/hadoop namenode -format -nonInteractive"
+  user node.hadoop.user
 end
