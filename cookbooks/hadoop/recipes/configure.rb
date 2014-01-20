@@ -38,6 +38,7 @@ cookbook_file "VideoCount.java" do
   action :create_if_missing
   owner node.hadoop.user
   group node.hadoop.user_group_name
+  mode 00644
 end
 
 cookbook_file "VideoCountMap.java" do
@@ -45,6 +46,7 @@ cookbook_file "VideoCountMap.java" do
   action :create_if_missing
   owner node.hadoop.user
   group node.hadoop.user_group_name
+  mode 00644
 end
 
 cookbook_file "VideoCountReduce.java" do
@@ -52,10 +54,18 @@ cookbook_file "VideoCountReduce.java" do
   action :create_if_missing
   owner node.hadoop.user
   group node.hadoop.user_group_name
+  mode 00644
 end
 
-execute "create directory through execute, coz chef is stupid with permission on recursive" do
+execute "format data folder" do
   command "./hadoop-#{node.hadoop.version}/bin/hadoop namenode -format -nonInteractive"
   user node.hadoop.user
   cwd node.hadoop.user_home
+end
+
+directory "#{node.hadoop.user_home}/classes" do
+  owner node.hadoop.user
+  group node.hadoop.user_group_name
+  mode 00755
+  action :create
 end
