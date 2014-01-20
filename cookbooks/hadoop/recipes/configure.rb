@@ -33,3 +33,22 @@ execute "create directory through execute, coz chef is stupid with permission on
   command "./hadoop-#{node.hadoop.version}/bin/hadoop namenode -format -nonInteractive"
   user node.hadoop.user
 end
+
+execute "transfer ownership to hduser" do
+  command "chown -R #{node.hadoop.user}:#{node.hadoop.user_group_name} #{node.hadoop.user_home}"
+end
+
+cookbook_file "VideoCount.java" do
+  path "#{node.hadoop.user_home}/VideoCount.java"
+  action :create_if_missing
+end
+
+cookbook_file "VideoCountMap.java" do
+  path "#{node.hadoop.user_home}/VideoCountMap.java"
+  action :create_if_missing
+end
+
+cookbook_file "VideoCountReduce.java" do
+  path "#{node.hadoop.user_home}/VideoCountReduce.java"
+  action :create_if_missing
+end
