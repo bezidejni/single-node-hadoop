@@ -29,11 +29,6 @@ template "#{node.hadoop.user_home}/hadoop-1.2.1/conf/hdfs-site.xml" do
   mode 0664
 end
 
-execute "create directory through execute, coz chef is stupid with permission on recursive" do
-  command "./hadoop-#{node.hadoop.version}/bin/hadoop namenode -format -nonInteractive"
-  user node.hadoop.user
-end
-
 execute "transfer ownership to hduser" do
   command "chown -R #{node.hadoop.user}:#{node.hadoop.user_group_name} #{node.hadoop.user_home}"
 end
@@ -41,14 +36,26 @@ end
 cookbook_file "VideoCount.java" do
   path "#{node.hadoop.user_home}/VideoCount.java"
   action :create_if_missing
+  owner node.hadoop.user
+  group node.hadoop.user_group_name
 end
 
 cookbook_file "VideoCountMap.java" do
   path "#{node.hadoop.user_home}/VideoCountMap.java"
   action :create_if_missing
+  owner node.hadoop.user
+  group node.hadoop.user_group_name
 end
 
 cookbook_file "VideoCountReduce.java" do
   path "#{node.hadoop.user_home}/VideoCountReduce.java"
   action :create_if_missing
+  owner node.hadoop.user
+  group node.hadoop.user_group_name
+end
+
+execute "create directory through execute, coz chef is stupid with permission on recursive" do
+  command "./hadoop-#{node.hadoop.version}/bin/hadoop namenode -format -nonInteractive"
+  user node.hadoop.user
+  cwd node.hadoop.user_home
 end
